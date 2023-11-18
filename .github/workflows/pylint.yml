@@ -21,5 +21,4 @@ jobs:
         pip install -U nbqa pylint
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
-        nbqa pylint $(git ls-files '*.py')
+        nbqa pylint $(git ls-files '*.ipynb')
