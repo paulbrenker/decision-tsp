@@ -21,6 +21,7 @@ jobs:
         pip install -U nbqa pylint
         pip install matplotlib
         pip install numpy
+        pip install pandas
     - name: Analysing the code with pylint
       run: |
         nbqa pylint $(git ls-files '*.ipynb')
