@@ -1,6 +1,7 @@
 import networkx as nx
 import numpy as np
 from networkx.algorithms.approximation import christofides, greedy_tsp
+import itertools
 
 def christo(instance, tree=None):
     G = get_nx_graph(instance['node_coordinates'])
@@ -51,30 +52,30 @@ def fi(instance):
     G = get_nx_graph(instance['node_coordinates'])
     unvisited = list(G.nodes)
 
-    edges = G.edges(data='weight')
-    start = max(edges, key= lambda tuple: tuple[2])
+    start = max(G.edges(data='weight'), key = lambda tuple: tuple[2])
     
     unvisited.remove(start[0])
     unvisited.remove(start[1])
 
-    tour = [start[0], start[1], start[0]]
+    tour = [int(start[0]), int(start[1]), int(start[0])]
     
     while len(unvisited) > 0:
         # find closest node to tour
-        possibilities = filter(lambda edge: ((edge[0] in tour) != (edge[1] in tour)), edges)
-        new_edge = max(possibilities, key=lambda tuple: tuple[2])
-        new_node = -1
-        if new_edge[0] in tour:
-            new_node = new_edge[1]
-        else:
-            new_node = new_edge[0]
-
-        unvisited.remove(new_node)
+        possibilities = list(itertools.product(tour,unvisited))
+        new_edge = max(possibilities, key=lambda tuple: G[tuple[0]][tuple[1]]['weight'])
+        new_node = new_edge[1]
             
+        unvisited.remove(new_node)
+
         # see possible tours
-        tours = [tour_insert(tour, i, new_node) for i in range(len(tour))]
-        tour = min(tours, key=lambda t: tour_len(t, G))
-        
+        c_len = tour_len(tour, G)
+        tours = [
+            (c_len - G[tour[i]][tour[i+1]]['weight'])
+            + G[tour[i]][new_node]['weight']
+            + G[tour[i+1]][new_node]['weight']
+            for i in range(len(tour)-1)
+        ]
+        tour.insert(np.argmin(tours)+1, new_node)
     len_tour = tour_len(tour, G)
     return len_tour
 
@@ -131,30 +132,33 @@ def ni(instance):
     G = get_nx_graph(instance['node_coordinates'])
     unvisited = list(G.nodes)
 
-    edges = G.edges(data='weight')
-    start = min(edges, key= lambda tuple: tuple[2])
+    edges = list(G.edges(data='weight'))
+    edges.sort(key=lambda tuple: tuple[2])
+    edges = np.array(edges)
+    start = edges[0]
     
     unvisited.remove(start[0])
     unvisited.remove(start[1])
 
-    tour = [start[0], start[1], start[0]]
+    tour = [int(start[0]), int(start[1]), int(start[0])]
     
     while len(unvisited) > 0:
         # find closest node to tour
-        possibilities = filter(lambda edge: ((edge[0] in tour) != (edge[1] in tour)), edges)
-        new_edge = min(possibilities, key=lambda tuple: tuple[2])
-        new_node = -1
-        if new_edge[0] in tour:
-            new_node = new_edge[1]
-        else:
-            new_node = new_edge[0]
-
-        unvisited.remove(new_node)
+        possibilities = list(itertools.product(tour,unvisited))
+        new_edge = min(possibilities, key=lambda tuple: G[tuple[0]][tuple[1]]['weight'])
+        new_node = new_edge[1]
             
-        # see possible tours
-        tours = [tour_insert(tour, i, new_node) for i in range(len(tour))]
-        tour = min(tours, key=lambda t: tour_len(t, G))
+        unvisited.remove(new_node)
         
+        # see possible tours
+        c_len = tour_len(tour, G)
+        tours = [
+            (c_len - G[tour[i]][tour[i+1]]['weight'])
+            + G[tour[i]][new_node]['weight']
+            + G[tour[i+1]][new_node]['weight']
+            for i in range(len(tour)-1)
+        ]
+        tour.insert(np.argmin(tours)+1, new_node)
     len_tour = tour_len(tour, G)
     return len_tour
 
@@ -193,38 +197,41 @@ def ri(instance):
     G = get_nx_graph(instance['node_coordinates'])
     unvisited = list(G.nodes)
 
-    edges = G.edges(data='weight')
-    start = max(edges, key= lambda tuple: tuple[2])
+    start = max(G.edges(data='weight'), key = lambda tuple: tuple[2])
     
     unvisited.remove(start[0])
     unvisited.remove(start[1])
 
-    tour = [start[0], start[1], start[0]]
+    tour = [int(start[0]), int(start[1]), int(start[0])]
     
     while len(unvisited) > 0:
         # find closest node to tour
-        possibilities = set(G.nodes) - set(tour)
-        new_node = np.random.choice(list(possibilities))
-
-        unvisited.remove(new_node)
+        new_node = np.random.choice(unvisited)
             
+        unvisited.remove(new_node)
+
         # see possible tours
-        tours = [tour_insert(tour, i, new_node) for i in range(len(tour))]
-        tour = min(tours, key=lambda t: tour_len(t, G))
-        
+        c_len = tour_len(tour, G)
+        tours = [
+            (c_len - G[tour[i]][tour[i+1]]['weight'])
+            + G[tour[i]][new_node]['weight']
+            + G[tour[i+1]][new_node]['weight']
+            for i in range(len(tour)-1)
+        ]
+        tour.insert(np.argmin(tours)+1, new_node)
     len_tour = tour_len(tour, G)
     return len_tour
 
 
 def tour_len(tour, G):
-    edge_list = [(tour[j], tour[j+1]) for j in range(len(tour)-1)]
+    edge_list = [(tour[j], tour[j+1]) for j in range(1,len(tour)-1)]
     tour_len = sum([G[u][v]['weight'] for u,v in edge_list])
     return tour_len
 
 def tour_insert(tour, i, node):
-    t = tour.copy()
-    t.insert(i, node)
-    return t
+    tmp = tour.copy()
+    tmp.insert(i,node)
+    return tmp
 
 
 def get_nx_graph(coordinates) -> nx.Graph():
