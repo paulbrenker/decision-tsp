@@ -4,6 +4,10 @@ from networkx.algorithms.approximation import christofides, greedy_tsp
 import itertools
 
 def christo(instance, tree=None):
+    """
+
+        Inputs:
+    """
     G = get_nx_graph(instance['node_coordinates'])
     christo_tour = christofides(G, weight='weight', tree=tree)
     tmp = [(christo_tour[i],christo_tour[(i+1)]) for i in range(len(christo_tour)-1)]
@@ -12,12 +16,20 @@ def christo(instance, tree=None):
     
 
 def mst(instance):
+    """
+
+        Inputs:
+    """
     G = get_nx_graph(instance['node_coordinates'])
     mstree = nx.minimum_spanning_tree(G)
     mslen = sum([G[u][v]['weight'] for u,v in mstree.edges])
     return mslen, mstree
 
 def onetree(instance, tree=None):
+    """
+
+        Inputs:
+    """
     G = get_nx_graph(instance['node_coordinates'])
     M = nx.Graph()
 
@@ -48,6 +60,7 @@ def fi(instance):
     """
         Farthest Insertion TSP Heuristic O(n²)
         returns length of farthest insertion tour
+        Inputs:
     """
     G = get_nx_graph(instance['node_coordinates'])
     unvisited = list(G.nodes)
@@ -80,6 +93,10 @@ def fi(instance):
     return len_tour
 
 def greedy(instance):
+    """
+
+        Inputs:
+    """
     G = get_nx_graph(instance['node_coordinates'])
     greedy_tour = greedy_tsp(G, weight='weight')
     tmp = [(greedy_tour[i],greedy_tour[(i+1)]) for i in range(len(greedy_tour)-1)]
@@ -87,9 +104,17 @@ def greedy(instance):
     return greedy
 
 def lplb(instance):
+    """
+
+        Inputs:
+    """
     pass
 
 def mstheu(instance, tree=None)-> nx.Graph():
+    """
+
+        Inputs:
+    """
     if tree == None:
         _, tmp = mst(instance)
         tree = tmp
@@ -109,12 +134,20 @@ def mstheu(instance, tree=None)-> nx.Graph():
     return tour_len
 
 def hierholzer(G: nx.MultiGraph)-> list:
+    """
+
+        Inputs:
+    """
     B = nx.eulerian_circuit(G)
     walk = [tup[0] for tup in list(B)]
     walk.append(walk[0])
     return walk
 
 def hamilton(walk):
+    """
+
+        Inputs:
+    """
     hamil = []
     for item in walk:
         if not item in hamil:
@@ -164,6 +197,10 @@ def ni(instance):
 
 
 def nn(instance):
+    """
+
+        Inputs:
+    """
     G = get_nx_graph(instance['node_coordinates'])
     current = list(G.nodes)[0]
     unvisited = list(G.nodes)
@@ -187,6 +224,10 @@ def nn(instance):
     return nn
 
 def opt(instance):
+    """
+
+        Inputs:
+    """
     return instance['tourlength']
 
 def ri(instance):
@@ -224,17 +265,30 @@ def ri(instance):
 
 
 def tour_len(tour, G):
+    """
+
+        Inputs:
+    """
     edge_list = [(tour[j], tour[j+1]) for j in range(1,len(tour)-1)]
     tour_len = sum([G[u][v]['weight'] for u,v in edge_list])
     return tour_len
 
 def tour_insert(tour, i, node):
+    """
+        
+        Inputs:
+    """
     tmp = tour.copy()
     tmp.insert(i,node)
     return tmp
 
 
 def get_nx_graph(coordinates) -> nx.Graph():
+    """
+        Function enters coordinates into an nx.Graph() Datastructure and Computes the EUC_2D Distance between nodes and enteres them as edge weight to the graph
+        Inputs:
+            coordinates: Tuplelist containing 2D nodes
+    """
     G = nx.complete_graph(n=len(coordinates))
     for u,v in G.edges:
         dist = np.linalg.norm(np.array(coordinates[u]) - np.array(coordinates[v]))
