@@ -30,6 +30,6 @@ Dieses Repository hat folgende Inhalte:
 - **visualisations:** Visualisierungen rund um das Thema TSP, Touren, Heuristiken und Analyse der Regressionsmodelle.
 
 #### Datensätze
-1) TSP Datensatz: 2000 Instanzen mit gleichverteilten Knoten, extensives Heuristic Set (inklusive LP-Relaxation und Assignment Relaxation). _Author: Peter Becker_
-2) Geclusterter TSP Datensatz: 2000 Instanzen, die jeweils 3 bis 6 Cluster enthalten, um die Knoten normalverteilt sind. Heuristiken enthalten keine Daten zu Assignment und LP Relaxation _Author: Paul Brenker_
-3) Geclusterter TSP Datensatz 1000 Instanzen, die jeweils 3 bis 6 Cluster enthalten, um die Knoten normalverteilt sind. Heuristiken enthalten keine Daten zu Assignment und LP Relaxation _Author: Peter Becker_
+1) TSP Datensatz: 2000 Instanzen mit gleichverteilten Knoten, extensives Heuristic Set (inklusive LP-Relaxation und Assignment Relaxation). _Erstellt von: Peter Becker_
+2) Geclusterter TSP Datensatz: 2000 Instanzen, die jeweils 3 bis 6 Cluster enthalten, um die Knoten normalverteilt sind. Heuristiken enthalten keine Daten zu Assignment und LP Relaxation _Erstellt von: Paul Brenker_
+3) Geclusterter TSP Datensatz 1000 Instanzen, die jeweils 1 enthalten, um das Knoten normalverteilt sind. Heuristiken enthalten keine Daten zu Assignment und LP Relaxation _Erstellt von: Peter Becker_
