@@ -1,6 +1,8 @@
-name: Pylint
+name: CICD
 
-on: [push]
+on: 
+  pull_request:
+  workflow_dispatch:
 
 env:
   PROJECT: 'decision-tsp'
