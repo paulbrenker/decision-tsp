@@ -15,4 +15,3 @@ from .heuristics import nn
 from .heuristics import opt
 from .heuristics import ri
 from .heuristics import get_nx_graph
-

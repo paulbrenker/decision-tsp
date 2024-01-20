@@ -51,6 +51,6 @@ jobs:
       run: |
         poetry run nbqa pylint $(git ls-files '*.ipynb')
 
-    #- name: Lint Modules
-    #  run: |
-    #    poetry run pylint $(git ls-files '*.py')
+    - name: Lint Modules
+      run: |
+        poetry run pylint $(git ls-files '*.py')
