@@ -2,8 +2,32 @@ name: Pylint
 
 on: [push]
 
+env:
+  PROJECT: 'decision-tsp'
+  PROJECT_NAME: 'Dataanalysis pipeline for decision-tsp'
+  ACTION_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
 jobs:
+  labeler:
+    permissions:
+      contents: read
+      pull-requests: write
+    timeout-minutes: 1
+    name: label
+    runs-on: ubuntu-latest
+    outputs:
+      labels: ${{ steps.read-labels.outputs.labels }}
+    steps:
+      - uses: actions/labeler/@v4
+
+      - name: Read current labels
+        id: read-labels
+        if: github.ref != 'refs/heads/main'
+        uses: snnaplab/get-labels-action@v1.0.1
+
   build:
+    needs: labeler
+    if: github.ref == 'refs/head/main' || contains(needs.labeler.outputs.labels, 'code-change')
     runs-on: ubuntu-latest
 
     steps:
@@ -24,3 +48,7 @@ jobs:
     - name: Lint Notebooks
       run: |
         poetry run nbqa pylint $(git ls-files '*.ipynb')
+
+    #- name: Lint Modules
+    #  run: |
+    #    poetry run pylint $(git ls-files '*.py')
