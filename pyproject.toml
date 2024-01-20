@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "decision-tsp"
+version = "0.1.0"
+description = ""
+authors = ["Paul Brenker <paul.brenker@smail.inf.h-brs.de>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+notebook = "^7.0.7"
+numpy = "^1.26.3"
+pandas = "^2.2.0"
+scikit-learn = "^1.4.0"
+matplotlib = "^3.8.2"
+pyconcorde = {git = "https://github.com/jvkersch/pyconcorde"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
