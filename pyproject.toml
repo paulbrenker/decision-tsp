@@ -16,6 +16,7 @@ matplotlib = "^3.8.2"
 pyconcorde = {git = "https://github.com/jvkersch/pyconcorde"}
 nbqa = "^1.7.1"
 pylint = "^3.0.3"
+pyarrow = "^14.0.2"
 
 
 [build-system]

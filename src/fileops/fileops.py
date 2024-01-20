@@ -1,3 +1,7 @@
+"""
+    Saving and loading operations to access data from filesystem.
+    Specialized methods for this projects JSON structures.
+"""
 import json
 import os
 import numpy as np

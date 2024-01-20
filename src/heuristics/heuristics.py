@@ -1,24 +1,37 @@
-import networkx as nx
-import numpy as np
-from networkx.algorithms.approximation import christofides, greedy_tsp
+"""
+    TSP Heuristics that return the value of the length of the calculated tour
+"""
 import itertools
+import networkx as nx
+from networkx.algorithms.approximation import christofides, greedy_tsp
+import numpy as np
+
+# disabeling capitalized variable names because of nx standard G for graph
+# pylint: disable=C0103
+
+# disabeling generator suggestions as we want to use also for each loops
+# pylint: disable=R1728
 
 def christo(instance, tree=None):
     """
-
+        Christofides TSP Heuristic Length
         Inputs:
+            instance: a TSP Instance codified in concorde style
+            tree: a Minimum Spanning Tree Instance of the Graph as
+                nx.Graph
     """
     G = get_nx_graph(instance['node_coordinates'])
     christo_tour = christofides(G, weight='weight', tree=tree)
     tmp = [(christo_tour[i],christo_tour[(i+1)]) for i in range(len(christo_tour)-1)]
-    christo = sum([G[u][v]['weight'] for u,v in tmp])
-    return christo
-    
+    christo_len = sum([G[u][v]['weight'] for u,v in tmp])
+    return christo_len
+
 
 def mst(instance):
     """
-
+        Minimum Spanning Tree Calculation
         Inputs:
+            A TSP Instance codified in concorde style
     """
     G = get_nx_graph(instance['node_coordinates'])
     mstree = nx.minimum_spanning_tree(G)
@@ -27,13 +40,16 @@ def mst(instance):
 
 def onetree(instance, tree=None):
     """
-
+        1-Tree TSP lower bound length
         Inputs:
+            instance: a TSP Instance codified in concorde style
+            tree: a Minimum Spanning Tree Instance of the Graph as
+                nx.Graph
     """
     G = get_nx_graph(instance['node_coordinates'])
     M = nx.Graph()
 
-    if tree == None:
+    if tree is None:
         _, tmp = mst(instance)
         M = tmp
     else:
@@ -44,8 +60,8 @@ def onetree(instance, tree=None):
         neighbors = list(M.neighbors(node))
         if len(neighbors) == 1:
             candidates += [(node, c) for c in M.neighbors(neighbors[0]) if c != node]
-            
-    best = (-1,-1,100000)     
+
+    best = (-1,-1,100000)
     for u,v in candidates:
         edge = G[u][v]['weight']
         if edge < best[2]:
@@ -61,23 +77,25 @@ def fi(instance):
         Farthest Insertion TSP Heuristic O(n²)
         returns length of farthest insertion tour
         Inputs:
+            instance: a TSP Instance codified in concorde style
+
     """
     G = get_nx_graph(instance['node_coordinates'])
     unvisited = list(G.nodes)
 
     start = max(G.edges(data='weight'), key = lambda tuple: tuple[2])
-    
+
     unvisited.remove(start[0])
     unvisited.remove(start[1])
 
     tour = [int(start[0]), int(start[1]), int(start[0])]
-    
+
     while len(unvisited) > 0:
         # find closest node to tour
         possibilities = list(itertools.product(tour,unvisited))
         new_edge = max(possibilities, key=lambda tuple: G[tuple[0]][tuple[1]]['weight'])
         new_node = new_edge[1]
-            
+
         unvisited.remove(new_node)
 
         # see possible tours
@@ -94,28 +112,24 @@ def fi(instance):
 
 def greedy(instance):
     """
-
+        Greedy TSP Heuristic length
         Inputs:
+            instance: a TSP Instance codified in concorde style
+
     """
     G = get_nx_graph(instance['node_coordinates'])
     greedy_tour = greedy_tsp(G, weight='weight')
     tmp = [(greedy_tour[i],greedy_tour[(i+1)]) for i in range(len(greedy_tour)-1)]
-    greedy = sum([G[u][v]['weight'] for u,v in tmp])
-    return greedy
-
-def lplb(instance):
-    """
-
-        Inputs:
-    """
-    pass
+    greedy_len = sum([G[u][v]['weight'] for u,v in tmp])
+    return greedy_len
 
 def mstheu(instance, tree=None)-> nx.Graph():
     """
-
+        Minimum Spanning Tree TSP Heuristic length
         Inputs:
+            instance: a TSP Instance codified in concorde style
     """
-    if tree == None:
+    if tree is None:
         _, tmp = mst(instance)
         tree = tmp
 
@@ -129,14 +143,15 @@ def mstheu(instance, tree=None)-> nx.Graph():
     hamil_circuit = hamilton(euler_circuit)
 
     tour_edges = [(hamil_circuit[i], hamil_circuit[i+1]) for i in range(len(hamil_circuit)-1)]
-    tour_len = sum([G[u][v]['weight'] for u,v in tour_edges])
-        
-    return tour_len
+    mstheu_len = sum([G[u][v]['weight'] for u,v in tour_edges])
+
+    return mstheu_len
 
 def hierholzer(G: nx.MultiGraph)-> list:
     """
-
+        Hierholzer Algorithm
         Inputs:
+            G: nx.Graph()
     """
     B = nx.eulerian_circuit(G)
     walk = [tup[0] for tup in list(B)]
@@ -145,8 +160,9 @@ def hierholzer(G: nx.MultiGraph)-> list:
 
 def hamilton(walk):
     """
-
+        Hamilotonian Circle on a graph
         Inputs:
+            walk on a graph
     """
     hamil = []
     for item in walk:
@@ -154,13 +170,15 @@ def hamilton(walk):
             hamil.append(item)
         else:
             continue
-    hamil.append(hamil[0])    
+    hamil.append(hamil[0])
     return hamil
 
 def ni(instance):
     """
         Nearest Insertion TSP Heuristic O(n²)
         returns length of nearest insertion tour
+        Input:
+            instance: a TSP Instance codified in concorde style
     """
     G = get_nx_graph(instance['node_coordinates'])
     unvisited = list(G.nodes)
@@ -169,20 +187,20 @@ def ni(instance):
     edges.sort(key=lambda tuple: tuple[2])
     edges = np.array(edges)
     start = edges[0]
-    
+
     unvisited.remove(start[0])
     unvisited.remove(start[1])
 
     tour = [int(start[0]), int(start[1]), int(start[0])]
-    
+
     while len(unvisited) > 0:
         # find closest node to tour
         possibilities = list(itertools.product(tour,unvisited))
         new_edge = min(possibilities, key=lambda tuple: G[tuple[0]][tuple[1]]['weight'])
         new_node = new_edge[1]
-            
+
         unvisited.remove(new_node)
-        
+
         # see possible tours
         c_len = tour_len(tour, G)
         tours = [
@@ -195,11 +213,11 @@ def ni(instance):
     len_tour = tour_len(tour, G)
     return len_tour
 
-
 def nn(instance):
     """
-
+        Nearest Neighbor TSP Heuristic length
         Inputs:
+            instance: a TSP Instance codified in concorde style
     """
     G = get_nx_graph(instance['node_coordinates'])
     current = list(G.nodes)[0]
@@ -217,16 +235,17 @@ def nn(instance):
         current = best[1]
         tour.append(current)
         unvisited.remove(current)
-        
+
     tour.append(list(G.nodes)[0])
     tmp = [(tour[i],tour[(i+1)]) for i in range(len(tour)-1)]
-    nn = sum([G[u][v]['weight'] for u,v in tmp])
-    return nn
+    nn_len = sum([G[u][v]['weight'] for u,v in tmp])
+    return nn_len
 
 def opt(instance):
     """
-
+        Optimal TSP Tour length
         Inputs:
+            instance: a TSP Instance codified in concorde style
     """
     return instance['tourlength']
 
@@ -234,21 +253,23 @@ def ri(instance):
     """
         Random Insertion TSP Heuristic O(n²)
         returns length of random insertion tour
+        Inputs:
+            instance: a TSP Instance codified in concorde style
     """
     G = get_nx_graph(instance['node_coordinates'])
     unvisited = list(G.nodes)
 
     start = max(G.edges(data='weight'), key = lambda tuple: tuple[2])
-    
+
     unvisited.remove(start[0])
     unvisited.remove(start[1])
 
     tour = [int(start[0]), int(start[1]), int(start[0])]
-    
+
     while len(unvisited) > 0:
         # find closest node to tour
         new_node = np.random.choice(unvisited)
-            
+
         unvisited.remove(new_node)
 
         # see possible tours
@@ -263,29 +284,33 @@ def ri(instance):
     len_tour = tour_len(tour, G)
     return len_tour
 
-
 def tour_len(tour, G):
     """
-
+        Tour length of a given tour
         Inputs:
+            tour: a tour of indeces over a graph
+            G: The nx.Graph with weighted edges
     """
     edge_list = [(tour[j], tour[j+1]) for j in range(1,len(tour)-1)]
-    tour_len = sum([G[u][v]['weight'] for u,v in edge_list])
-    return tour_len
+    len_tour = sum([G[u][v]['weight'] for u,v in edge_list])
+    return len_tour
 
 def tour_insert(tour, i, node):
     """
-        
+        Inserting a node at a given index in a tour
         Inputs:
+            tour: a list that represents a tour over a graph
+            node: the node that has to be inserted
+            i: the index where node should be inserted
     """
     tmp = tour.copy()
     tmp.insert(i,node)
     return tmp
 
-
 def get_nx_graph(coordinates) -> nx.Graph():
     """
-        Function enters coordinates into an nx.Graph() Datastructure and Computes the EUC_2D Distance between nodes and enteres them as edge weight to the graph
+        Function enters coordinates into an nx.Graph() Datastructure and Computes
+        the EUC_2D Distance between nodes and enteres them as edge weight to the graph
         Inputs:
             coordinates: Tuplelist containing 2D nodes
     """
