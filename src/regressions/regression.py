@@ -1,12 +1,13 @@
+"""
+    Functions in to create specialized regression models for data input
+    Train them and generate data for a learning curve.
+"""
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.linear_model import LinearRegression
-from sklearn.pipeline import make_pipeline
-from sklearn.svm import SVR
-from sklearn.preprocessing import StandardScaler
-from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+
+# disabeling captitalized variable names rule because of sklearn X_train standards
+# pylint: disable=C0103
 
 def regression_model_predictions(X_train, y_train, X_verify, model):
     """
@@ -17,7 +18,7 @@ def regression_model_predictions(X_train, y_train, X_verify, model):
 
     # making predictions
     predictions = model.predict(X_verify)
-    
+
     return predictions
 
 
@@ -28,7 +29,7 @@ def create_prediction_acuracy_maps(predictions, y_verify, results, errors):
     """
     errors['mean_squared_error'].append(mean_squared_error(y_verify, predictions))
     errors['mean_absolute_error'].append(mean_absolute_error(y_verify, predictions))
-    
+
     for key, value in results.items():
         if isinstance(key, str):
             continue
@@ -40,16 +41,23 @@ def create_prediction_acuracy_maps(predictions, y_verify, results, errors):
         correct_predictions_rel = np.count_nonzero(within_limits)/len(y_verify)
         value.append(correct_predictions_rel)
 
-    
     return results, errors
 
+# disable lists as dangerous default value
+# pylint: disable=W0102
 def get_instances(
     len_dataset=2000,
     partition_of_data_set=1/5,
     number_of_sets=50,
     limits = [0.0025, 0.005, 0.01, 0.015, 0.02]):
-    
-    train_set_size = np.linspace(1, len_dataset*partition_of_data_set, num=number_of_sets) / len_dataset
+    """
+        Get Basic Datastructures to perform training on given data
+        and to instantiate learning curves
+    """
+
+    train_set_size = np.linspace(
+        1, len_dataset*partition_of_data_set, num=number_of_sets
+    ) / len_dataset
     results = {}
     for limit in limits:
         results[limit] = []
@@ -59,16 +67,20 @@ def get_instances(
     }
     return train_set_size, results, errors
 
-
+# disabeling limit on input size because this is an aggregative function
+# pylint: disable=R0913
 def train_models(X, y, model, train_set_size, results, errors, test_size=0.3):
+    """
+        Train a given regression model with given input data
+    """
     for t in train_set_size:
         #creating training and test data
         X_train, X_verify, y_train, y_verify = train_test_split(
             X, y, train_size=t, test_size=test_size, random_state=101)
-    
+
         # creating a regression model
         predictions = regression_model_predictions(X_train, y_train, X_verify, model)
-    
+
         #adding devs
         results, errors = create_prediction_acuracy_maps(predictions, y_verify, results, errors)
 
