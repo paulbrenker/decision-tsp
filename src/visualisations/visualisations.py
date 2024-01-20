@@ -1,3 +1,7 @@
+"""
+    Specialised Visualisation Methods for the Decision-TSP Project
+    Visualisations around the topic of graphs and regressions.
+"""
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -19,6 +23,7 @@ heuristic_names = {
     '1tree': '1 Tree',
     'onetree': '1 Tree'
 }
+
 custom_cmap = {
     0: 'blue',
     1: 'orange',
@@ -60,22 +65,19 @@ def visualise_heuristics_distribution(plot_data: dict):
     # Show the plot
     plt.show()
 
-
-
 def visualise_heuristics(heuristics, n_range):
     """
         plot the behavior of the heuristics in comparison to the optimal tour
         x axis is |V| = n
     """
     plt.figure(figsize=(15, 7), dpi=100)
-    
-    
+
     for (heuristic, data) in heuristics.items():
         if heuristic == 'opt':
             plt.scatter(n_range, data, marker='.', alpha=0.6, label=heuristic_names[heuristic])
         else:
             plt.scatter(n_range, data, marker='x', alpha=0.4, label=heuristic_names[heuristic])
-    
+
     plt.title('Heuristics')
     plt.xlabel('|V|')
     plt.ylabel('TSP tour')
@@ -84,7 +86,8 @@ def visualise_heuristics(heuristics, n_range):
     plt.show()
 
 
-
+# disabeling too many arguments -> necessary for visualisation methods
+# pylint: disable=R0913
 def visualise_regression(predictions, actual, results, errors, train_set_size, title):
     """
         visualise set of learning curve, distribution and error curve
@@ -126,7 +129,7 @@ def _plot_error_curve(ax, errors: dict, train_set_size):
     """
         PLot of development of mean squared error and mean absolute error
         over size of training set.
-    """    
+    """
     for key, value in errors.items():
         ax.plot(train_set_size*2000, value, label=key.replace('_',' '))
 
@@ -147,18 +150,18 @@ def visualise_tour(coordinates: np.array, tour=None, connect_tour=True, title='T
             title: title of the visualization
     """
     plt.figure(figsize =(15, 7), dpi=100)
-    ax = plt.axes()
     plt.scatter(*coordinates.T, alpha=0.8, color='orange')
     if tour is not None:
         seq = []
         if connect_tour:
-            seq = np.array([ [coordinates[step], coordinates[tour[(i+1)%len(tour)]]] for i, step in enumerate(tour)])
+            seq = np.array([[coordinates[step], coordinates[tour[(i+1)%len(tour)]]]
+                            for i, step in enumerate(tour)])
         else:
-            seq = np.array([ [coordinates[step], coordinates[tour[(i+1)%len(tour)]]] for i, step in enumerate(tour[:-1])]) 
+            seq = np.array([[coordinates[step], coordinates[tour[(i+1)%len(tour)]]]
+                            for i, step in enumerate(tour[:-1])])
         plt.plot(*seq.T, color='black')
 
-
-    plt.title(title) 
+    plt.title(title)
     plt.plot()
     plt.show()
 
@@ -166,24 +169,24 @@ def visualise_r_2_heatmap(r2: pd.DataFrame):
     """
         Plot the given comparison of r_2 values in a Dataframe
     """
-    fig, ax = plt.subplots(figsize=(20,10))
-    im = ax.imshow(r2)
-    
+    _, ax = plt.subplots(figsize=(20,10))
+    ax.imshow(r2)
+
     ax.set_title('r_2 Value of Regression models and Datasets')
-    # set axis labels 
+    # set axis labels
     ax.set_xticks(np.arange(len(r2.T)), labels=r2.columns)
     ax.set_yticks(np.arange(len(r2)), labels=r2.index)
-    
+
     # Rotate the tick labels and set their alignment.
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
              rotation_mode="anchor")
-    
+
     # Loop over data dimensions and create text annotations.
     for i in range(len(r2.T)):
         for j in range(len(r2)):
-            text = ax.text(i, j, round(r2.iloc[j].iloc[i],4),
+            ax.text(i, j, round(r2.iloc[j].iloc[i],4),
                            ha="center", va="center", color="black")
-    
+
     plt.show()
 
 def visualise_heuristic_comparison(old: list, new:list, opt: list, heu_key: str):
