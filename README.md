@@ -15,6 +15,11 @@ Angefertigt von:
 | Präsentation |[Overleaf](https://de.overleaf.com/read/ypcqznfvbzbx#23b2c7)|
 | Projekt Management |[Trello](https://trello.com/invite/b/v0lDgIsF/ATTI0190e03796fcfcdd58dd92254aa3f82530527181/decision-tsp)|
 
+## Nutzung
+Alle verwendeten Dependencies sind über [Poetry](https://python-poetry.org/) gemanaged und können über eine virtuelle Umgebung direkt _out of the box_ verwendet werden:
+
+- Installiere alle Dependencies: `poetry install` 
+- Starte Entwicklungsumgebung: `poetry run jupyer-lab`
 
 ## Repository Struktur
 Dieses Repository hat folgende Inhalte:
