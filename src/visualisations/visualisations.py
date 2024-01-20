@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 # Abbreviation dict for heuristics
 heuristic_names = {
@@ -159,4 +160,43 @@ def visualise_tour(coordinates: np.array, tour=None, connect_tour=True, title='T
 
     plt.title(title) 
     plt.plot()
+    plt.show()
+
+def visualise_r_2_heatmap(r2: pd.DataFrame):
+    """
+        Plot the given comparison of r_2 values in a Dataframe
+    """
+    fig, ax = plt.subplots(figsize=(20,10))
+    im = ax.imshow(r2)
+    
+    ax.set_title('r_2 Value of Regression models and Datasets')
+    # set axis labels 
+    ax.set_xticks(np.arange(len(r2.T)), labels=r2.columns)
+    ax.set_yticks(np.arange(len(r2)), labels=r2.index)
+    
+    # Rotate the tick labels and set their alignment.
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+             rotation_mode="anchor")
+    
+    # Loop over data dimensions and create text annotations.
+    for i in range(len(r2.T)):
+        for j in range(len(r2)):
+            text = ax.text(i, j, round(r2.iloc[j].iloc[i],4),
+                           ha="center", va="center", color="black")
+    
+    plt.show()
+
+def visualise_heuristic_comparison(old: list, new:list, opt: list, heu_key: str):
+    """
+        Plot Difference between self calculated heuristics and given heuristics as percentual diff
+    """
+    figure, axis = plt.subplots(1, 2, figsize=(35,5), gridspec_kw={'width_ratios': [4, 1]})
+    figure.suptitle(heuristic_names[heu_key], fontsize=16)
+
+    np_h1 = np.array(old)
+    np_h1_own = np.array(new)
+    diff = ((np_h1_own - np_h1) / np.array(opt))*100
+
+    axis[0].plot(diff, c='black', alpha=0.8)
+    axis[1].hist(diff, bins=30, color='black', alpha=0.6)
     plt.show()

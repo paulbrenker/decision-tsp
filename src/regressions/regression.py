@@ -47,7 +47,7 @@ def get_instances(
     len_dataset=2000,
     partition_of_data_set=1/5,
     number_of_sets=50,
-    limits = [0, 0.0025, 0.005, 0.01, 0.015, 0.02]):
+    limits = [0.0025, 0.005, 0.01, 0.015, 0.02]):
     
     train_set_size = np.linspace(1, len_dataset*partition_of_data_set, num=number_of_sets) / len_dataset
     results = {}
