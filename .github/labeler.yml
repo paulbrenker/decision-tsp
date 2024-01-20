@@ -1,0 +1,19 @@
+github-change:
+  - '.github/**'
+  - '.gitignore'
+
+code-change:
+  - 'src/**'
+  - '*.ipynb'
+
+documentation-change:
+  - 'README.md'
+  - 'HELP.md'
+  - 'images/**'
+
+dataset-change:
+  - 'data/**'
+
+dependency-change:
+  - 'poetry.lock'
+  - 'pyproject.toml'
