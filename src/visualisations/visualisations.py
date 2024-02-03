@@ -149,7 +149,7 @@ def visualise_tour(coordinates: np.array, tour=None, connect_tour=True, title='T
             connect_tour: boolean connect first and last node of the tour
             title: title of the visualization
     """
-    plt.figure(figsize =(15, 7), dpi=100)
+    plt.figure(figsize =(11, 7), dpi=100)
     plt.scatter(*coordinates.T, alpha=0.8, color='orange')
     if tour is not None:
         seq = []
