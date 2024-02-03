@@ -188,18 +188,3 @@ def visualise_r_2_heatmap(r2: pd.DataFrame):
                            ha="center", va="center", color="black")
 
     plt.show()
-
-def visualise_heuristic_comparison(old: list, new:list, opt: list, heu_key: str):
-    """
-        Plot Difference between self calculated heuristics and given heuristics as percentual diff
-    """
-    figure, axis = plt.subplots(1, 2, figsize=(35,5), gridspec_kw={'width_ratios': [4, 1]})
-    figure.suptitle(heuristic_names[heu_key], fontsize=16)
-
-    np_h1 = np.array(old)
-    np_h1_own = np.array(new)
-    diff = ((np_h1_own - np_h1) / np.array(opt))*100
-
-    axis[0].plot(diff, c='black', alpha=0.8)
-    axis[1].hist(diff, bins=30, color='black', alpha=0.6)
-    plt.show()
