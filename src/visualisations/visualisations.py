@@ -54,7 +54,7 @@ def visualise_heuristics_distribution(plot_data: dict):
 
     # Iterate over the dictionary and plot histograms
     for i, (array_name, array_data) in enumerate(plot_data.items()):
-        axs[i].hist(array_data, bins=20, color = custom_cmap[i], alpha=0.4)
+        axs[i].hist(array_data, bins=50, color = custom_cmap[i], alpha=0.4)
         axs[i].set_title(heuristic_names[array_name])
         axs[i].grid(True)
 
