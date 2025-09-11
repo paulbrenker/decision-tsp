@@ -39,7 +39,7 @@ custom_cmap = {
     11: 'lawngreen'
 }
 
-def visualise_heuristics_distribution(plot_data: dict):
+def visualise_heuristics_distribution(plot_data: dict, path: str):
     """Print A matrix of histograms that decribe given heuristics"""
 
     # Get the number of rows and columns for the matrix
@@ -62,10 +62,10 @@ def visualise_heuristics_distribution(plot_data: dict):
     plt.tight_layout()
 
 
-    # Show the plot
-    plt.show()
+    # Save the plot
+    plt.savefig(path)
 
-def visualise_heuristics(heuristics, n_range):
+def visualise_heuristics(heuristics, n_range, path: str):
     """
         plot the behavior of the heuristics in comparison to the optimal tour
         x axis is |V| = n
@@ -83,12 +83,12 @@ def visualise_heuristics(heuristics, n_range):
     plt.ylabel('TSP tour')
     plt.legend()
     plt.grid(True)
-    plt.show()
+    plt.savefig(path)
 
 
 # disabeling too many arguments -> necessary for visualisation methods
 # pylint: disable=R0913
-def visualise_regression(predictions, actual, results, errors, train_set_size, title):
+def visualise_regression(predictions, actual, results, errors, train_set_size, title, path):
     """
         visualise set of learning curve, distribution and error curve
     """
@@ -97,7 +97,7 @@ def visualise_regression(predictions, actual, results, errors, train_set_size, t
     _plot_distribution(axis[0], predictions, actual)
     _plot_learning_curve(axis[1], results, train_set_size)
     _plot_error_curve(axis[2], errors, train_set_size)
-    plt.show()
+    plt.savefig(path)
 
 def _plot_distribution(ax, predictions: list, actual: list):
     """
@@ -141,7 +141,7 @@ def _plot_error_curve(ax, errors: dict, train_set_size):
 
 
 
-def visualise_tour(coordinates: np.array, tour=None, connect_tour=True, title='TSP Tour'):
+def visualise_tour(coordinates: np.array, path: str, tour=None, connect_tour=True, title='TSP Tour'):
     """
         Method to visualize a given tsp tour including a heuristic
             coordinates: 2D np.array of graph coordinates
@@ -163,9 +163,9 @@ def visualise_tour(coordinates: np.array, tour=None, connect_tour=True, title='T
 
     plt.title(title)
     plt.plot()
-    plt.show()
+    plt.savefig(path)
 
-def visualise_r_2_heatmap(r2: pd.DataFrame):
+def visualise_r_2_heatmap(r2: pd.DataFrame, path: str):
     """
         Plot the given comparison of r_2 values in a Dataframe
     """
@@ -187,4 +187,4 @@ def visualise_r_2_heatmap(r2: pd.DataFrame):
             ax.text(i, j, round(r2.iloc[j].iloc[i],4),
                            ha="center", va="center", color="black")
 
-    plt.show()
+    plt.savefig(path)
