@@ -80,6 +80,6 @@ As expected the predictions are most accurate for the equidistributed data-set. 
   - **Heuristics:** Module to compute heuristics on TSP instances.
   - **Regressions:** Module to compute four regressions for data.
   - **Visualizations:** Abstracting visualizations to reusable functions.
-- **Final Presentation (German):** Find the `.tex` file and the presentation `.pdf` [here](#presentation/)
+- **Final Presentation (German):** Find the `.tex` file and the presentation `.pdf` [here](presentation)
 
 This project was created by **Paul Brenker** and **Nico Nowak** in the course _Projekt zur Datenanalyse_ 2023 at the **Hochschule Bonn-Rhein-Sieg**.

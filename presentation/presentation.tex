@@ -1,0 +1,376 @@
+
+\begin{document}
+
+% Presenter: Nico
+    \begin{frame}
+        \frametitle{Inhalt}
+        \tableofcontents
+    \end{frame}
+
+
+\section{Einleitung}
+% Presenter: Nico
+\begin{frame}{TSP}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+            \begin{itemize}
+        \item Komb. Optimierungsproblem
+        \item NP-schwer
+        \item Eingabe
+        \begin{itemize}
+            \item Vollständiger Graph
+            \item Kantengewichtsfunktion (\texttt{EUC\_2D})
+        \end{itemize}
+        \item Ausgabe
+        \begin{itemize}
+            \item Kürzester Hamiltonkreis
+        \end{itemize}
+    \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{figure}
+            \centering
+            \includegraphics[width=1\linewidth]{images/tsp.png}
+            \caption{\href{https://physics.aps.org/articles/v10/s32
+}{physics.aps.org}}
+            \label{fig:enter-label}
+        \end{figure}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% Presenter: Nico
+\begin{frame}{Decision TSP}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{itemize}
+            \item Klassifikationsproblem
+            \item NP-vollständig
+            \item Eingabe
+            \begin{itemize}
+                \item Vollständiger Graph
+                \item Kantengewichtsfunktion (\texttt{EUC\_2D})
+                \item Länge $n \in \mathbb{N} $
+            \end{itemize}
+            \item Ausgabe
+            \begin{itemize}
+                \item Gibt es Route $< n$
+            \end{itemize}
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{figure}
+            \centering
+            \includegraphics[width=1\linewidth]{images/tsp.png}
+            \caption{\href{https://physics.aps.org/articles/v10/s32
+}{physics.aps.org}}
+            \label{fig:enter-label}
+        \end{figure}
+    \end{column}
+\end{columns}
+\end{frame}
+
+
+
+
+\section{Datensätze}
+% Presenter: Paul
+\begin{frame}{Datensätze}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+            \begin{itemize}
+        \item 3 TSP Datensätze mit:
+        \begin{itemize}
+            \item 1000 - 2000 Instanzen
+        \end{itemize}
+        \item Probleminstanzen bestehen aus:
+        \begin{itemize}
+            \item 300 - 600 Knoten
+            \item 2D Koordinaten
+            \item Kantengewicht berechnet mit \texttt{EUC\_2D} (\textit{auf Ganzzahl gerundet})
+            \item Optimale Tour
+        \end{itemize}
+    \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{images/json.png}
+    \includegraphics[width=1\linewidth]{images/tour.png}
+    \label{fig:enter-label}
+\end{figure}
+    \end{column}
+\end{columns}
+\end{frame}
+% Presenter: Paul
+\begin{frame}{Datensätze}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=1.1\linewidth]{images/one_cluster_tour.png}
+                \caption{Ein Clusterzentrum}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=1.1\linewidth]{images/mul_cluster_tour.png}
+                \caption{Mehrere Clusterzentren}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\section{Heuristiken}
+% Presenter: Paul
+\begin{frame}{Heuristiken}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \begin{itemize}
+                \item 2 Untere Schranken
+                \begin{itemize}
+                    \item optimale Tour ist länger als Wert
+                \end{itemize}  
+                \item 7 Heuristiken / Approximationen
+                \begin{itemize}
+                    \item Schätzen zulässige Lösung, kurzer Hamiltonkreis
+                \end{itemize}
+            \end{itemize}
+            \begin{columns}[t]
+                \begin{column}[t]{0.5\textwidth}
+                    \begin{figure}
+                        \includegraphics[width=1.2\linewidth]{images/mst.png}
+                    \end{figure}
+                \end{column} 
+                \begin{column}[t]{0.5\textwidth}
+                    \begin{figure}
+                        \includegraphics[width=1.2\linewidth]{images/christo.png}
+                    \end{figure}
+                \end{column}
+            \end{columns}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \begin{figure}
+                \centering
+                    \includegraphics[width=0.8\linewidth]{images/heuristics_accuracy.png}
+                \label{fig:enter-label}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Presenter: Paul
+\begin{frame}{Heuristiken}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1.1\linewidth]{images/heuristics_distribution.png}
+        \caption{Gleichverteilte Knoten, vorgegebene Heuristiken}        
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Heuristiken}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1.09\linewidth]{images/heuristics_own_distribution.png}
+        \caption{Gleichverteilte Knoten, selbst berechnete Heuristiken} 
+    \end{figure}
+\end{frame}
+
+% Presenter: Paul
+\begin{frame}{Selbst berechnete Heuristiken}
+    \begin{itemize}
+        \item Für geclusterte Daten Heuristiken selbst berechnet
+        \item Unterschied selbst berechnet zu ursprünglichen Heuristiken in Prozent:
+    \end{itemize}
+    \begin{columns}
+        \begin{column}{0.33\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=1\linewidth]{images/abweichung_ni.png}
+            \end{figure}
+            \vspace{-0.5cm}
+            \begin{figure}
+                \centering
+                \includegraphics[width=1\linewidth]{images/abweichung_christo.png}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.33\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=1\linewidth]{images/abweichung_nn.png}
+            \end{figure}
+            \vspace{-0.5cm}
+            \begin{figure}
+                \centering
+                \includegraphics[width=1\linewidth]{images/abweichung_onetree.png}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.33\textwidth}
+            \begin{figure}
+                \centering
+                \includegraphics[width=1\linewidth]{images/abweichung_greedy.png}
+            \end{figure}
+            \vspace{-0.5cm}
+            \begin{figure}
+                \centering
+                \includegraphics[width=1\linewidth]{images/abweichung_mst.png}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Heuristiken}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1.1\linewidth]{images/heuristics_clustered_distribution.png}
+        \caption{Mehrere Clusterzentren, selbst berechnete Heuristiken}
+    \end{figure}
+\end{frame} 
+
+\section{Regressionsmodelle}
+% Presenter: Nico
+\begin{frame}{Regressionsmodelle}
+    \begin{itemize}
+        \item Regressionsmodell Input:
+        \begin{itemize}
+            \item Heuristiken
+            \item optimale Tour
+        \end{itemize}
+        \item Lernt Abhängigkeit von opt. Tour zu Heuristiken
+        \item Regressionsmodelle
+        \begin{itemize}
+            \item Multiple Lineare Regression
+            \item Entscheidungsbaum
+            \item Neuronales Netzwerk
+            \item Vector Support Machine Regression
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Presenter: Nico
+\begin{frame}{Multiple Lineare Regression}
+    \begin{itemize}
+        \item Gleichverteilte Knoten
+    \end{itemize}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1.05\linewidth]{images/mul_lin_reg.png}
+        \label{fig:enter-label}
+    \end{figure}
+    \centering
+        r_2 value = 0.99735
+\end{frame}
+
+% Presenter: Nico
+\begin{frame}{Multiple Lineare Regression}
+    \begin{itemize}
+        \item Ein Clusterzentrum
+    \end{itemize}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1.05\linewidth]{images/mul_lin_reg_single_cluster.png}
+        \label{fig:enter-label}
+    \end{figure}
+    \centering
+        r_2 value = 0.99395
+\end{frame}
+
+% Presenter: Nico
+\begin{frame}{Multiple Lineare Regression}
+    \begin{itemize}
+        \item Multiple Clusterzentren
+    \end{itemize}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1.05\linewidth]{images/mul_lin_reg_clustered.png}
+        \label{fig:enter-label}
+    \end{figure}
+    \centering
+        r_2 value = 0.99594
+\end{frame}
+
+% Presenter: Nico
+\begin{frame}{Entscheidungsbaum}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1.05\linewidth]{images/reg_tree.png}
+        \label{fig:enter-label}
+    \end{figure}
+    \centering
+        r_2 value = 0.99200
+\end{frame}
+
+% Presenter: Nico
+\begin{frame}{Neuronales Netzwerk}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1.05\linewidth]{images/nn_reg.png}
+        \label{fig:enter-label}
+    \end{figure}
+    \centering
+        r_2 value = 0.99534
+\end{frame}
+
+% Presenter: Nico
+\begin{frame}{SVM Regression}
+    \begin{figure}
+        \centering
+        \includegraphics[width=1.05\linewidth]{images/svm_reg.png}
+        \label{fig:enter-label}
+    \end{figure}
+    \centering
+        r_2 value = 0.98930
+\end{frame}
+
+% Presenter: Paul
+\begin{frame}{Regressionsvergleich}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.63\linewidth]{images/r_2_heatmap.png}
+        \label{fig:enter-label}
+    \end{figure}
+\end{frame}s
+\section{Fazit}
+% Presenter: Paul
+\begin{frame}{Vergleich mit Primärquellen}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+            \centering
+                \includegraphics[width=1.1\linewidth]{images/gnn_learning curve.png}
+                \caption{\href{https://arxiv.org/pdf/1809.02721.pdf}{Prates et. Al. 2018, S.4736, GNN trainiert auf gleichverteilten Daten}}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{figure}
+            \centering
+                \includegraphics[width=1\linewidth]{images/clusters_regression.png}
+                \caption{Lernkurve für Datensätze mit mehreren Clusterzentren}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Presenter: Paul
+\begin{frame}{Wichtigste Aussagen}
+    \begin{itemize}
+        \item Präzise Ergebnisse bei geringer Abweichung
+        \item Hohe Verlässlichkeit der Vorhersage
+        \item Reduzierte Komplexität im Vergleich zu GNNs
+        \item MLR am besten geeignet
+    \end{itemize}
+\end{frame}
+
+% Presenter: Paul
+\begin{frame}{Reflexion}
+    \begin{itemize}
+        \item Umgang mit Trainingsdaten
+            \begin{itemize}
+                \item Bessere Planung benötigter Daten
+            \end{itemize}
+        \item Arbeit mit Quellen
+    \end{itemize}
+\end{frame}
+
+\end{document}
