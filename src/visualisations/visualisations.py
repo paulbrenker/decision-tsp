@@ -141,7 +141,13 @@ def _plot_error_curve(ax, errors: dict, train_set_size):
 
 
 
-def visualise_tour(coordinates: np.array, path: str, tour=None, connect_tour=True, title='TSP Tour'):
+def visualise_tour(
+        coordinates: np.array,
+        path: str,
+        tour=None,
+        connect_tour=True,
+        title='TSP Tour'
+        ):
     """
         Method to visualize a given tsp tour including a heuristic
             coordinates: 2D np.array of graph coordinates
